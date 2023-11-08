@@ -1,12 +1,11 @@
 package com.yernaryelemess.spring.rest.controller;
 
 import com.yernaryelemess.spring.rest.entity.Employee;
+
+import com.yernaryelemess.spring.rest.exception_handling.NoSuchEmployeeException;
 import com.yernaryelemess.spring.rest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,8 +29,20 @@ public class MyRESTController {
 
         Employee employee = employeeService.getEmployee(id);
 
+        if (employee==null){
+            throw new NoSuchEmployeeException("There is no employee with ID = "
+                    + id + " in DataBase." );
+        }
+
         return employee;
     }
 
+    @PostMapping("/employees")
+    public Employee addNewEmployee(@RequestBody Employee employee){
+
+         employeeService.saveEmployee(employee);
+         return employee;
+
+    }
 
 }
